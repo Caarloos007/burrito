@@ -3,13 +3,14 @@ import time
 
 N = 8 
 
-barrier = threading.Barrier(N + 1) 
+num_trabajadores = int(input("¿Cuántos trabajadores deseas? "))
+barrier = threading.Barrier(N + num_trabajadores) 
 
-def trabajador():
+def trabajador(id):
     for i in range(1, N + 1):
-        print(f"Trabajador 1 está haciendo el burrito {i}...")
+        print(f"Trabajador {id} está haciendo el burrito {i}...")
         time.sleep(5)
-        print(f"Trabajador 1 ha terminado el burrito {i}.")
+        print(f"Trabajador {id} ha terminado el burrito {i}.")
     
     print("Todos los burritos han sido preparados. Los clientes empiezan a comer.")
     barrier.wait()
@@ -20,9 +21,10 @@ def cliente(id):
     print(f"Cliente {id} está comiendo.")
 
 threads = []
-t = threading.Thread(target=trabajador)
-threads.append(t)
-t.start()
+for i in range(1, num_trabajadores + 1):
+    t = threading.Thread(target=trabajador, args=(i,))
+    threads.append(t)
+    t.start()
 
 
 for i in range(1, N + 1):
